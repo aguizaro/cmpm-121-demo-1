@@ -1,11 +1,20 @@
 import "./style.css";
 
-/* Increase count by 1 and update display with correct count*/
-function updateCount() {
-  count++;
-  countDisplay.innerText = `You have eaten ${count} pizzas!`;
+const growthRate: number = 1;
+
+// Increase count by 1 if clcked or auto increase and update display with correct count
+function updateCount(currentTime: number) {
+  if (!startTime) {
+    startTime = currentTime;
+  }
+  const elapsed: number = currentTime! - startTime!; // ms
+  count = (elapsed / 1000) * growthRate + clicks; // (seconds * rate) + clicks
+
+  countDisplay.innerText = `You have eaten ${Math.floor(count)} pizzas!`;
+  requestAnimationFrame(updateCount);
 }
 
+// Top level
 const app: HTMLDivElement = document.querySelector("#app")!;
 const gameName = "Pizza Party";
 document.title = gameName;
@@ -14,19 +23,25 @@ document.title = gameName;
 const header: HTMLHeadElement = document.createElement("h1");
 header.innerHTML = gameName;
 
-// Button
+// Create Button
 const button: HTMLButtonElement = document.createElement("button");
 button.textContent = "🍕";
 
-let count: number = 0;
-
 // Count Display
+let count: number = 0;
 const countDisplay: HTMLDivElement = document.createElement("div");
 countDisplay.innerText = `You have eaten ${count} pizzas!`;
 
-// Increase count every sec + whenever button is clicked
-button.addEventListener("click", updateCount);
-setInterval(updateCount, 1000);
+// count + 1 whenever button is clicked
+let clicks: number = 0;
+button.addEventListener("click", () => {
+  clicks++;
+  updateCount(performance.now());
+});
 
 // Add elements to app
 app.append(header, button, countDisplay);
+
+// start time and animation
+let startTime: number | undefined;
+requestAnimationFrame(updateCount);
