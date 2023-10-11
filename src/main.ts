@@ -2,20 +2,22 @@ import "./style.css";
 
 let growthRate: number = 0;
 const employeeRequires: number = 10;
+let startTime: number | undefined;
 
-// Increase count by 1 if clcked or auto increase and update display with correct count
+// Increase count every frame. Count increases `growthRate` units per seond
 function updateCount(currentTime: number) {
   if (!startTime) {
     startTime = currentTime;
   }
-  const elapsed: number = currentTime! - startTime!; // ms
-  count = (elapsed / 1000) * growthRate + clicks; // (seconds * rate) + clicks
+  const elapsed: number = currentTime! - startTime!; // time elapsed since last frame in ms
+  startTime = performance.now(); // capture start of next frame
+  count += (elapsed / 1000) * growthRate; // (seconds * rate)
 
   countDisplay.innerText = `You have delivered ${Math.floor(count)} pizzas!`;
-  requestAnimationFrame(updateCount);
-
   //disable button if not enough credits
   employeeButton.disabled = count < employeeRequires;
+
+  requestAnimationFrame(updateCount);
 }
 
 // Top level
@@ -30,31 +32,31 @@ header.innerHTML = gameName;
 // Create pizza button
 const pizzaButton: HTMLButtonElement = document.createElement("button");
 pizzaButton.textContent = "🍕";
-// Create upgrade button
+// Create employee upgrade button
 const employeeButton: HTMLButtonElement = document.createElement("button");
 employeeButton.textContent = "Hire an employee 🛵";
+employeeButton.disabled = true;
 
 // Count Display
 let count: number = 0;
 const countDisplay: HTMLDivElement = document.createElement("div");
 countDisplay.innerText = `You have delivered ${count} pizzas!`;
 
-// count + 1 whenever button is clicked
-let clicks: number = 0;
 pizzaButton.addEventListener("click", () => {
-  clicks++;
-  updateCount(performance.now());
+  count++;
+  countDisplay.innerText = `You have delivered ${Math.floor(count)} pizzas!`;
+  //enable button if enough credits
+  employeeButton.disabled = count < employeeRequires;
 });
 
 employeeButton.addEventListener("click", () => {
-  clicks -= employeeRequires;
+  count -= employeeRequires;
   growthRate++;
-  updateCount(performance.now());
+  if (growthRate === 1) {
+    // start auto-count animaiton when button is clicked for the first time
+    requestAnimationFrame(updateCount);
+  }
 });
 
 // Add elements to app
 app.append(header, pizzaButton, countDisplay, employeeButton);
-
-// start time and animation
-let startTime: number | undefined;
-requestAnimationFrame(updateCount);
