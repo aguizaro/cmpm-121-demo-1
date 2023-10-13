@@ -33,9 +33,11 @@ body {
 }
 
 h1 {
-  font-size: 60px;
-  margin-bottom: 20px;
-  line-height: 1.1;
+  font-size: 90px;
+  font-family: Geneva;
+  margin: 0px;
+  padding: 0px;
+  color: #dc0400b1;
 }
 
 #app {
@@ -45,7 +47,7 @@ h1 {
   text-align: center;
   padding: 20px;
   border-radius: 10px;
-  max-width: 400px; /* Optional: Limit the width of the #app */
+  max-width: 600px; /* Optional: Limit the width of the #app */
   width: 100%;
 }
 
@@ -54,7 +56,7 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   margin: 5px;
-  font-size: 1em;
+  font-size: 15px;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
@@ -70,16 +72,28 @@ button:focus-visible {
 }
 
 .pizza-button {
-  font-size: 50px;
+  font-size: 70px;
   margin: 10px;
   align-items: center;
 }
 
 .pizza-count {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 200;
   font-style: italic;
+  color: white;
+  border: 6px double rgb(152, 149, 149);
   margin: 20px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.description {
+  font-family: serif;
+  font-size: 25px;
+  color: #f1ad3fdb;
+  margin: 0px;
+  margin-bottom: 10px;
 }
 
 @media (prefers-color-scheme: light) {

@@ -50,7 +50,7 @@ class Upgrade {
     this.button.disabled = true;
     this.button.innerText =
       this.text +
-      ` Cost: ${this.cost.toFixed(2)}p | Rate: +${this.growthRate}pps`;
+      ` Cost: ${this.cost.toFixed(2)}p - - Rate: +${this.growthRate}pps`;
     this.count = 0;
     this.displayCount = displayCount;
     this.displayCount.innerText = `Count: ${this.count}`;
@@ -88,6 +88,10 @@ document.title = gameName;
 // Game Title
 const header: HTMLHeadElement = document.createElement("h1");
 header.innerHTML = gameName;
+// Description
+const descript: HTMLHeadElement = document.createElement("h2");
+descript.innerHTML = "Yeah sure you can pay me in pizza!";
+descript.classList.add("description");
 
 // Create pizza button
 const pizzaButton: HTMLButtonElement = document.createElement("button");
@@ -96,7 +100,7 @@ pizzaButton.classList.add("pizza-button");
 
 // Create employee upgrade
 const employee: Upgrade = new Upgrade(
-  "🛵 Hire a new employee 🧑🏽‍🍳.",
+  "🛵 Hire a new employee 🧑🏽‍🍳 - - ",
   10,
   0.1,
   document.createElement("button"),
@@ -104,7 +108,7 @@ const employee: Upgrade = new Upgrade(
 );
 // Create oven upgrade
 const oven: Upgrade = new Upgrade(
-  "🆕 Install new Industrial Oven ♨️.",
+  "🆕 Install new Industrial Oven ♨️ - - ",
   100,
   2,
   document.createElement("button"),
@@ -112,7 +116,7 @@ const oven: Upgrade = new Upgrade(
 );
 // Create chain upgrade
 const chain: Upgrade = new Upgrade(
-  " 🛖 Open new pizza location 🏭.",
+  " 🛖 Open new pizza location 🏭 - - ",
   1000,
   50,
   document.createElement("button"),
@@ -137,7 +141,7 @@ pizzaButton.addEventListener("click", () => {
 });
 
 // Add elements to app
-app.append(header, countDisplay, rateDisplay, pizzaButton);
+app.append(header, descript, countDisplay, rateDisplay, pizzaButton);
 upgrades.forEach((element) => {
   app.append(element.button, element.displayCount);
 });
