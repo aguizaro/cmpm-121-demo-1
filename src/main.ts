@@ -125,6 +125,20 @@ const availableItems: Item[] = [
     document.createElement("button"),
     document.createElement("div"),
   ),
+  new Item(
+    " 🤖 Build super pizza robot chef 👩🏽‍🍳 - - ",
+    10000,
+    100,
+    document.createElement("button"),
+    document.createElement("div"),
+  ),
+  new Item(
+    " 🚁 Buy helicopter for faster delivery 👨🏾‍✈️ - - ",
+    100000,
+    500,
+    document.createElement("button"),
+    document.createElement("div"),
+  ),
 ];
 
 // Display Stats
