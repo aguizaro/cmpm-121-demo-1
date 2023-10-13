@@ -1,39 +1,11 @@
 import "./style.css";
 
-let totalGrowthRate = 0;
-let startTime: number | undefined;
-let animationActive = false;
-const costGrowthRate = 1.15;
-
-// Increase count every frame. Count increases `growthRate` units per seond
-function updateCount(currentTime: number) {
-  if (!startTime) {
-    startTime = currentTime;
-  }
-  const elapsed: number = currentTime - startTime; // time elapsed since last frame in ms
-  startTime = currentTime; // capture start of next frame
-  count += (elapsed / 1000) * totalGrowthRate; // (seconds * rate)
-  updateDisplays();
-  requestAnimationFrame(updateCount);
-}
-
-// enable or disable buttons if enough credits
-// update counts/stats on display
-function updateDisplays() {
-  upgrades.forEach((element) => {
-    element.button.disabled = count < element.cost;
-    element.displayCount.innerText = `Count: ${element.count}`;
-  });
-  countDisplay.innerText = `You have delivered ${Math.floor(count)} pizzas!`;
-  rateDisplay.innerText = `Current Rate: ${totalGrowthRate.toFixed(1)} pps`;
-}
-
-class Upgrade {
+class Item {
   text: string;
   cost: number;
   growthRate: number;
   button: HTMLButtonElement;
-  count: number; //number of times this upgrade is purchased
+  count: number; //number of times this item is purchased
   displayCount: HTMLDivElement;
 
   constructor(
@@ -58,7 +30,7 @@ class Upgrade {
   }
 
   purchase() {
-    this.count++; //number of this purchased
+    this.count++; //number this items purchased
     count -= this.cost; //count of pizzas
     this.cost *= costGrowthRate;
     this.button.innerText =
@@ -80,6 +52,35 @@ class Upgrade {
   }
 }
 
+// Increase count every frame. Count increases `growthRate` units per seond
+function updateCount(currentTime: number) {
+  if (!startTime) {
+    startTime = currentTime;
+  }
+  const elapsed: number = currentTime - startTime; // time elapsed since last frame in ms
+  startTime = currentTime; // capture start of next frame
+  count += (elapsed / 1000) * totalGrowthRate; // (seconds * rate)
+  updateDisplays();
+  requestAnimationFrame(updateCount);
+}
+
+// enable or disable buttons if enough credits
+// update counts/stats on display
+function updateDisplays() {
+  availableItems.forEach((element) => {
+    element.button.disabled = count < element.cost;
+    element.displayCount.innerText = `Count: ${element.count}`;
+  });
+  countDisplay.innerText = `You have delivered ${Math.floor(count)} pizzas!`;
+  rateDisplay.innerText = `Current Rate: ${totalGrowthRate.toFixed(1)} pps`;
+}
+
+// Global vars
+let totalGrowthRate = 0;
+let startTime: number | undefined;
+let animationActive = false;
+const costGrowthRate = 1.15;
+
 // Top level
 const app: HTMLDivElement = document.querySelector("#app")!;
 const gameName = "Pizza Party";
@@ -98,32 +99,33 @@ const pizzaButton: HTMLButtonElement = document.createElement("button");
 pizzaButton.textContent = "🍕";
 pizzaButton.classList.add("pizza-button");
 
-// Create employee upgrade
-const employee: Upgrade = new Upgrade(
-  "🛵 Hire a new employee 🧑🏽‍🍳 - - ",
-  10,
-  0.1,
-  document.createElement("button"),
-  document.createElement("div"),
-);
-// Create oven upgrade
-const oven: Upgrade = new Upgrade(
-  "🆕 Install new Industrial Oven ♨️ - - ",
-  100,
-  2,
-  document.createElement("button"),
-  document.createElement("div"),
-);
-// Create chain upgrade
-const chain: Upgrade = new Upgrade(
-  " 🛖 Open new pizza location 🏭 - - ",
-  1000,
-  50,
-  document.createElement("button"),
-  document.createElement("div"),
-);
-
-const upgrades: Upgrade[] = [employee, oven, chain];
+// List of Items / items in this game
+const availableItems: Item[] = [
+  // Create employee Item
+  new Item(
+    "🛵 Hire a new employee 🧑🏽‍🍳 - - ",
+    10,
+    0.1,
+    document.createElement("button"),
+    document.createElement("div"),
+  ),
+  // Create oven Item
+  new Item(
+    "🆕 Install new Industrial Oven ♨️ - - ",
+    100,
+    2,
+    document.createElement("button"),
+    document.createElement("div"),
+  ),
+  // Create chain Item
+  new Item(
+    " 🛖 Open new pizza location 🏭 - - ",
+    1000,
+    50,
+    document.createElement("button"),
+    document.createElement("div"),
+  ),
+];
 
 // Display Stats
 let count: number = 0; //Count of pizza's delivered
@@ -142,6 +144,7 @@ pizzaButton.addEventListener("click", () => {
 
 // Add elements to app
 app.append(header, descript, countDisplay, rateDisplay, pizzaButton);
-upgrades.forEach((element) => {
+// Add all items / upgrades to the app
+availableItems.forEach((element) => {
   app.append(element.button, element.displayCount);
 });
