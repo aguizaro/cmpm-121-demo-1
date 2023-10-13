@@ -1,8 +1,9 @@
 import "./style.css";
 
-let totalGrowthRate: number = 0;
+let totalGrowthRate = 0;
 let startTime: number | undefined;
 let animationActive = false;
+const costGrowthRate = 1.15;
 
 // Increase count every frame. Count increases `growthRate` units per seond
 function updateCount(currentTime: number) {
@@ -21,47 +22,54 @@ function updateCount(currentTime: number) {
 function updateDisplays() {
   upgrades.forEach((element) => {
     element.button.disabled = count < element.cost;
-    element.displayElement.innerText = `Count: ${element.count}`;
+    element.displayCount.innerText = `Count: ${element.count}`;
   });
   countDisplay.innerText = `You have delivered ${Math.floor(count)} pizzas!`;
   rateDisplay.innerText = `Current Rate: ${totalGrowthRate.toFixed(1)} pps`;
 }
 
 class Upgrade {
+  text: string;
   cost: number;
   growthRate: number;
   button: HTMLButtonElement;
   count: number; //number of times this upgrade is purchased
-  displayElement: HTMLDivElement;
+  displayCount: HTMLDivElement;
 
   constructor(
     text: string,
     cost: number,
     growthRate: number,
     button: HTMLButtonElement,
-    displayElement: HTMLDivElement,
+    displayCount: HTMLDivElement,
   ) {
+    this.text = text;
     this.cost = cost;
     this.growthRate = growthRate;
     this.button = button;
     this.button.disabled = true;
-    this.button.innerText = text;
+    this.button.innerText =
+      this.text +
+      ` Cost: ${this.cost.toFixed(2)}p | Rate: +${this.growthRate}pps`;
     this.count = 0;
-    this.displayElement = displayElement;
-    this.displayElement.innerText = `Count: ${this.count}`;
+    this.displayCount = displayCount;
+    this.displayCount.innerText = `Count: ${this.count}`;
     this.makeClickable();
   }
 
   purchase() {
-    count -= this.cost;
+    this.count++; //number of this purchased
+    count -= this.cost; //count of pizzas
+    this.cost *= costGrowthRate;
+    this.button.innerText =
+      this.text +
+      ` Cost: ${this.cost.toFixed(2)}p | Rate: +${this.growthRate}pps`;
     totalGrowthRate += this.growthRate;
   }
 
   makeClickable() {
     this.button.addEventListener("click", () => {
-      count -= this.cost;
-      totalGrowthRate += this.growthRate;
-      this.count++;
+      this.purchase();
       updateDisplays();
 
       if (!animationActive) {
@@ -88,7 +96,7 @@ pizzaButton.classList.add("pizza-button");
 
 // Create employee upgrade
 const employee: Upgrade = new Upgrade(
-  "🛵 Hire a new employee 🧑🏽‍🍳. Cost: 10p | Rate: +0.1 pps",
+  "🛵 Hire a new employee 🧑🏽‍🍳.",
   10,
   0.1,
   document.createElement("button"),
@@ -96,7 +104,7 @@ const employee: Upgrade = new Upgrade(
 );
 // Create oven upgrade
 const oven: Upgrade = new Upgrade(
-  "🆕 Install new Industrial Oven ♨️. Cost: 100p | Rate: +2.0 pps",
+  "🆕 Install new Industrial Oven ♨️.",
   100,
   2,
   document.createElement("button"),
@@ -104,7 +112,7 @@ const oven: Upgrade = new Upgrade(
 );
 // Create chain upgrade
 const chain: Upgrade = new Upgrade(
-  " 🛖 Open new pizza location 🏭. Cost: 1000p | Rate: +50.0 pps",
+  " 🛖 Open new pizza location 🏭.",
   1000,
   50,
   document.createElement("button"),
@@ -131,5 +139,5 @@ pizzaButton.addEventListener("click", () => {
 // Add elements to app
 app.append(header, countDisplay, rateDisplay, pizzaButton);
 upgrades.forEach((element) => {
-  app.append(element.button, element.displayElement);
+  app.append(element.button, element.displayCount);
 });
