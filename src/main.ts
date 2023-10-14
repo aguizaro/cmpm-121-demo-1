@@ -152,7 +152,6 @@ rateDisplay.innerText = `Current Rate: ${totalGrowthRate.toFixed(1)} pps`;
 //runs every time the pizza button is clicked
 pizzaButton.addEventListener("click", () => {
   count++;
-  countDisplay.innerText = `You have delivered ${Math.floor(count)} pizzas!`;
   updateDisplays();
 });
 
